@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: food-rescue-copilot
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m streamlit run app.py --server.address=0.0.0.0 --server.port=$PORT
+    healthCheckPath: /_stcore/health
+    disk:
+      name: food-rescue-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: DATA_DIR
+        value: /var/data
+      - key: LOCAL_DEV
+        value: "0"
+      - key: APP_PASSWORD
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5-mini
+      - key: MAX_DAILY_MODEL_CALLS
+        value: "100"
+      - key: PROFILE_MAX_AGE_HOURS
+        value: "24"
